@@ -304,7 +304,7 @@ export default function SettingsPage() {
             </div>
             <div className="setting">
               <Checkbox
-                label="Lock Max Power Items When Loading DIM"
+                label={t('Settings.LockMaxItems')}
                 name="lockMaxItems"
                 value={settings.lockMaxItems}
                 onChange={onCheckChange}
