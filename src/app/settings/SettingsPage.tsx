@@ -9,6 +9,8 @@ import { itemTagList } from 'app/inventory/dim-item-info';
 import NewItemIndicator from 'app/inventory/NewItemIndicator';
 import { sortedStoresSelector } from 'app/inventory/selectors';
 import { useLoadStores } from 'app/inventory/store/hooks';
+import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
+import { getLight } from 'app/loadout-drawer/loadout-utils';
 import WishListSettings from 'app/settings/WishListSettings';
 import { useIsPhonePortrait } from 'app/shell/selectors';
 import DimApiSettings from 'app/storage/DimApiSettings';
@@ -20,9 +22,12 @@ import exampleWeaponImage from 'images/example-weapon.jpg';
 import _ from 'lodash';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useSubscription } from 'use-subscription';
 import ErrorBoundary from '../dim-ui/ErrorBoundary';
+import { showGearPower$ } from '../gear-power/gear-power';
 import InventoryItem from '../inventory/InventoryItem';
 import { DimItem } from '../inventory/item-types';
+import { allItemsSelector, storesSelector } from '../inventory/selectors';
 import { AppIcon, refreshIcon } from '../shell/icons';
 import { setCharacterOrder } from './actions';
 import CharacterOrderEditor from './CharacterOrderEditor';
@@ -218,6 +223,19 @@ export default function SettingsPage() {
     { id: 'spreadsheets', title: t('Settings.Data') },
   ]);
 
+  const unSortStores = useSelector(storesSelector);
+  const allItems = useSelector(allItemsSelector);
+
+  const selectedStoreId = useSubscription(showGearPower$);
+  const selectedStore = unSortStores.find((s) => s.id === selectedStoreId);
+  if (!selectedStore) {
+    return null;
+  }
+
+  const { unrestricted, equippable } = maxLightItemSet(allItems, selectedStore);
+  const maxBasePower = getLight(selectedStore, unrestricted);
+  const equippableMaxBasePower = getLight(selectedStore, equippable);
+
   const uniqChars =
     stores &&
     _.uniqBy(
@@ -309,6 +327,8 @@ export default function SettingsPage() {
                 value={settings.lockMaxItems}
                 onChange={onCheckChange}
               />
+              "hey look at me"{maxBasePower}
+              {equippableMaxBasePower}
             </div>
 
             <div className="setting">
