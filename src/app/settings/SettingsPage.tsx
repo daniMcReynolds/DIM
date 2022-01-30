@@ -302,6 +302,14 @@ export default function SettingsPage() {
                 </button>
               </div>
             </div>
+            <div className="setting">
+              <Checkbox
+                label="Lock Max Power Items When Loading DIM"
+                name="lockMaxItems"
+                value={settings.lockMaxItems}
+                onChange={onCheckChange}
+              />
+            </div>
 
             <div className="setting">
               <label htmlFor="itemSort">{t('Settings.SetSort')}</label>

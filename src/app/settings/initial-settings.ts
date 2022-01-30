@@ -17,6 +17,7 @@ export interface Settings extends DimApiSettings {
   loadoutSort: LoadoutSort;
   itemFeedHideTagged: boolean;
   itemFeedExpanded: boolean;
+  lockMaxItems: boolean;
 }
 
 export const initialSettingsState: Settings = {
@@ -27,4 +28,5 @@ export const initialSettingsState: Settings = {
   loadoutSort: LoadoutSort.ByEditTime,
   itemFeedHideTagged: true,
   itemFeedExpanded: false,
+  lockMaxItems: false,
 };
