@@ -4,6 +4,7 @@ import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
 import { DimItem } from 'app/inventory/item-types';
 import { locateItem } from 'app/inventory/locate-item';
+import { lockButtonTitle } from 'app/item-actions/LockButton';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import clsx from 'clsx';
@@ -41,9 +42,8 @@ export default function GearPower() {
   }
 
   const { unrestricted, equippable } = maxLightItemSet(allItems, selectedStore);
-  for (const x in unrestricted) {
-    console.log(x);
-  }
+  /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
+  unrestricted.forEach((x) => lockButtonTitle(x, 'lock'));
 
   const maxBasePower = getLight(selectedStore, unrestricted);
   const equippableMaxBasePower = getLight(selectedStore, equippable);
