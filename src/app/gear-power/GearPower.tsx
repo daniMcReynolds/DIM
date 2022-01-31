@@ -41,6 +41,10 @@ export default function GearPower() {
   }
 
   const { unrestricted, equippable } = maxLightItemSet(allItems, selectedStore);
+  for (const x in unrestricted) {
+    console.log(x);
+  }
+
   const maxBasePower = getLight(selectedStore, unrestricted);
   const equippableMaxBasePower = getLight(selectedStore, equippable);
   const powerFloor = Math.floor(maxBasePower);
