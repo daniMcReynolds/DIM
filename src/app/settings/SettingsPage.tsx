@@ -35,7 +35,11 @@ import './settings.scss';
 import SortOrderEditor, { SortProperty } from './SortOrderEditor';
 import Spreadsheets from './Spreadsheets';
 import { TroubleshootingSettings } from './Troubleshooting';
-
+import { allItemsSelector, storesSelector } from '../inventory/selectors';
+import { showGearPower$ } from '../gear-power/gear-power';
+import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
+import { lockPowerfulItems } from 'app/inventory/item-move-service';
+import { useSubscription } from 'use-subscription';
 // import  unrestricted from 'app/gear-power/GearPower';
 
 const fakeWeapon = {
@@ -89,12 +93,26 @@ export default function SettingsPage() {
   useLoadStores(currentAccount);
   const setSetting = useSetSetting();
 
+  const storesUnsort = useSelector(storesSelector);
+  const allItems = useSelector(allItemsSelector);
+  const selectedStoreId = useSubscription(showGearPower$);
+  const selectedStore = storesUnsort.find((s) => s.id === selectedStoreId);
+
+
+
+
+
+
+
   const onCheckChange = (checked: boolean, name: keyof Settings) => {
+
+
     if (name.length === 0) {
       errorLog('settings', new Error('You need to have a name on the form input'));
     }
 
     setSetting(name, checked);
+
   };
   const onChange: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
     if (e.target.name.length === 0) {
@@ -106,6 +124,14 @@ export default function SettingsPage() {
     } else {
       setSetting(e.target.name as keyof Settings, e.target.value);
     }
+    if (selectedStore&&settings.lockMaxItems) {
+      // eslint-disable-next-line no-console
+      console.error("yuh");
+      const { unrestricted, equippable } = maxLightItemSet(allItems, selectedStore);
+      lockPowerfulItems(unrestricted);
+      equippable;
+    }
+
   };
 
   const onChangeNumeric: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement> = (e) => {
@@ -227,6 +253,8 @@ export default function SettingsPage() {
       (s) => s.classType
     );
 
+
+
   return (
     <PageWithMenu>
       <PageWithMenu.Menu>
@@ -304,13 +332,14 @@ export default function SettingsPage() {
                 </button>
               </div>
             </div>
-            <div className="setting">
+            <div className="setting horizontal">
               <Checkbox
                 label={t('Settings.LockMaxItems')}
                 name="lockMaxItems"
                 value={settings.lockMaxItems}
                 onChange={onCheckChange}
               />
+
             </div>
 
             <div className="setting">

@@ -10,6 +10,7 @@ import { count } from 'app/utils/util';
 import { DestinyClass } from 'bungie-api-ts/destiny2';
 import { PlatformErrorCodes } from 'bungie-api-ts/user';
 import _ from 'lodash';
+// import { element } from 'prop-types';
 import { AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import {
@@ -87,6 +88,12 @@ export function setItemLockState(
 
     dispatch(itemLockStateChanged({ item, state, type }));
   };
+}
+
+export function lockPowerfulItems(items: DimItem[]): void {
+  for  (const element of items) {
+    (setItemLockState(element,!element.locked,"lock"));
+  }
 }
 
 function equipApi(item: DimItem): typeof d2equip {

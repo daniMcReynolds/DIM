@@ -2,19 +2,22 @@ import BungieImage from 'app/dim-ui/BungieImage';
 import FractionalPowerLevel from 'app/dim-ui/FractionalPowerLevel';
 import BucketIcon from 'app/dim-ui/svgs/BucketIcon';
 import { t } from 'app/i18next-t';
+
 import { DimItem } from 'app/inventory/item-types';
 import { locateItem } from 'app/inventory/locate-item';
-import { lockButtonTitle } from 'app/item-actions/LockButton';
 import { maxLightItemSet } from 'app/loadout-drawer/auto-loadouts';
 import { getLight } from 'app/loadout-drawer/loadout-utils';
 import clsx from 'clsx';
-import React from 'react';
+// import React, {useState} from 'react';
 import { useSelector } from 'react-redux';
 import { useSubscription } from 'use-subscription';
 import Sheet from '../dim-ui/Sheet';
 import { allItemsSelector, storesSelector } from '../inventory/selectors';
 import { showGearPower$ } from './gear-power';
 import styles from './GearPower.m.scss';
+// import { hideItemPopup } from 'app/item-popup/item-popup';
+// import { useThunkDispatch } from 'app/store/thunk-dispatch';
+// import { trackTriumph } from 'app/dim-api/basic-actions';
 
 const bucketClassNames: Partial<Record<DimItem['type'], string>> = {
   KineticSlot: styles.kinetic,
@@ -41,9 +44,53 @@ export default function GearPower() {
     return null;
   }
 
+
   const { unrestricted, equippable } = maxLightItemSet(allItems, selectedStore);
+  /*
+  unrestricted.forEach(async element => {
+    const state = !element.locked;
+    const type = 'lock';
+    await void useThunkDispatch<any>(setItemLockState(element, state, type));
+
+  });
+
   /* eslint no-console: ["error", { allow: ["warn", "error"] }] */
-  unrestricted.forEach((x) => lockButtonTitle(x, 'lock'));
+  /*
+  for (let i =0;i<unrestricted.length;i++) {
+    const state = !unrestricted[i].locked;
+    const type = 'lock';
+    await useThunkDispatch(setItemLockState(unrestricted[i], state, type));
+
+  }
+    /*
+    const [locking, setLocking] = useState(false);
+    async () => {
+
+      const type='lock';
+      let state = false;
+      if (type === 'lock') {
+        state = !x.locked;
+      } else if (type === 'track') {
+        state = !x.tracked;
+      }
+
+      /*
+      if (x.pursuit?.recordHash) {
+        useThunkDispatch(trackTriumph({ recordHash: x.pursuit.recordHash, tracked: state }));
+        hideItemPopup();
+        return;
+      }
+
+
+      setLocking(true);
+      try {
+        await useThunkDispatch(setItemLockState(x, state, type));
+      } finally {
+        setLocking(false);
+      }
+    };
+  });
+      */
 
   const maxBasePower = getLight(selectedStore, unrestricted);
   const equippableMaxBasePower = getLight(selectedStore, equippable);
